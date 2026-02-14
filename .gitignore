@@ -1,0 +1,16 @@
+# Build
+/target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+
+# Env
+.env
+
+# Logs
+*.log
