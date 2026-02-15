@@ -33,7 +33,7 @@ management:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:please-change-this-super-secret-key-at-least-32-bytes}
+    secret: $T9xM2qL7vN4kR1pZ8dF6sH3jC5wY0bUeA2mQ7tG9nV4xK1rP8zD6fJ3cL0sW5yH
     access-token-expiration-seconds: ${JWT_ACCESS_EXPIRATION_SECONDS:900}
     refresh-token-expiration-seconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}
     issuer: ${JWT_ISSUER:hyrup-student-management}
