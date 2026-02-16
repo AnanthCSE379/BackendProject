@@ -1,45 +1,17 @@
+server:
+  port: ${SERVER_PORT:8080}
+
 spring:
-  application:
-    name: hyrup-student-management
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/hyrup}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     open-in-view: false
-    properties:
-      hibernate:
-        format_sql: true
-        jdbc:
-          time_zone: UTC
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-
-server:
-  port: ${SERVER_PORT:8080}
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-  endpoint:
-    health:
-      show-details: never
 
 app:
   jwt:
-    secret: $T9xM2qL7vN4kR1pZ8dF6sH3jC5wY0bUeA2mQ7tG9nV4xK1rP8zD6fJ3cL0sW5yH
-    access-token-expiration-seconds: ${JWT_ACCESS_EXPIRATION_SECONDS:900}
-    refresh-token-expiration-seconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}
-    issuer: ${JWT_ISSUER:hyrup-student-management}
-  security:
-    auth-rate-limit-per-minute: ${AUTH_RATE_LIMIT_PER_MINUTE:10}
-
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
+    secret: ${JWT_SECRET:12468be46502d712acb9539a58ffa3a25ae73ccb919b89c526eadf123608ff3c}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:3600}
