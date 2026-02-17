@@ -1,26 +1,30 @@
 # HYRUP Student Management API (Core Requirements Only)
 
-Minimal Spring Boot project that implements only the mandatory assignment requirements.
+Minimal Spring Boot implementation focused strictly on mandatory assignment requirements.
 
-## 1) Tech stack
+## What this project includes
+- Secure auth APIs: register and login
+- Password hashing with BCrypt
+- JWT token generation and validation
+- Protected student CRUD APIs
+- PostgreSQL persistence via Spring Data JPA
+- Postman collection and API documentation
+
+## Scope decisions
+- Only core requirements are implemented
+- Optional features removed (Docker, Swagger, Flyway, refresh tokens, rate limiting, pagination/search, test scaffolding)
+
+## Tech stack
 - Java 17
 - Spring Boot 3.2.x
-- Spring Security (BCrypt + JWT)
+- Spring Security
 - Spring Data JPA
 - PostgreSQL
+- JJWT
 
-## 2) Implemented requirements
-- Student model with identification, academic, and contact details
-- Registration and login APIs
-- Email validation
-- Password hashing (BCrypt)
-- JWT generation with claims (`userId`, `email`, `role`)
-- JWT middleware to protect student routes
-- REST APIs with proper status codes
-
-## 3) Project structure
+## Project structure
 ```text
-src/main/java/com/hyrup/studentmanagement
+/Users/ananth/Documents/Hyrup project/src/main/java/com/hyrup/studentmanagement
 ├── AppUser.java
 ├── AppUserRepository.java
 ├── AuthController.java
@@ -32,85 +36,124 @@ src/main/java/com/hyrup/studentmanagement
 ├── StudentManagementApplication.java
 └── StudentRepository.java
 
-src/main/resources
+/Users/ananth/Documents/Hyrup project/src/main/resources
 └── application.yml
 ```
 
-## 4) Environment variables
-Copy `.env.example` values into your shell or `.env`.
+## Environment variables
+Use:
+- `/Users/ananth/Documents/Hyrup project/.env`
+- `/Users/ananth/Documents/Hyrup project/.env.example`
 
 | Variable | Description |
 |---|---|
 | `SERVER_PORT` | App port |
-| `DB_URL` | JDBC URL (example: `jdbc:postgresql://localhost:5432/hyrup`) |
+| `DB_URL` | JDBC URL (`jdbc:postgresql://localhost:5432/hyrup`) |
 | `DB_USERNAME` | PostgreSQL username |
 | `DB_PASSWORD` | PostgreSQL password |
-| `JWT_SECRET` | JWT secret (minimum 32 chars) |
-| `JWT_EXPIRATION_SECONDS` | Access token expiry in seconds |
+| `JWT_SECRET` | JWT secret (32+ chars) |
+| `JWT_EXPIRATION_SECONDS` | Token expiry seconds |
 
-## 5) Database setup / migration approach
-This project uses JPA auto-schema update for simplicity.
-- Configure database connection in env vars
-- Create database once:
-```sql
-CREATE DATABASE hyrup;
+## Setup and run
+
+### 1) Start PostgreSQL
+```bash
+brew services start postgresql@16
+pg_isready -h localhost -p 5432
 ```
-- On app start, tables are created/updated automatically via:
-`spring.jpa.hibernate.ddl-auto=update`
 
-## 6) Run locally
-1. Start PostgreSQL.
-2. Ensure env vars are set.
-3. Run:
+### 2) Create database (one-time)
+```bash
+createdb -h localhost -U postgres hyrup
+```
+If it already exists, ignore the error.
+
+### 3) Load environment variables
+```bash
+cd "/Users/ananth/Documents/Hyrup project"
+set -a
+source .env
+set +a
+```
+
+### 4) Verify JWT secret is loaded
+```bash
+echo -n "$JWT_SECRET" | wc -c
+```
+Expected: `32` or more.
+
+### 5) Start Spring Boot app
 ```bash
 mvn spring-boot:run
 ```
+Keep this terminal running.
 
-## 7) API documentation
+## Postman usage (step-by-step)
 
-### Auth (public)
-1. `POST /api/auth/register`
-- Request:
+### 1) Open Postman
+```bash
+open -a Postman
+```
+Sign in (or use guest mode if shown).
+
+### 2) Import collection
+Import file:
+- `/Users/ananth/Documents/Hyrup project/postman/HYRUP-Student-Management.postman_collection.json`
+
+### 3) Set collection variable
+In Postman collection variables:
+- `baseUrl = http://localhost:8080`
+
+### 4) How to enter request body in Postman
+Inside a request tab:
+1. Click `Body`
+2. Select `raw`
+3. Select `JSON` from right-side dropdown
+4. Paste JSON
+5. Click `Send`
+
+### 5) Run requests in this exact order
+1. `Auth > Register`
+2. `Auth > Login` (auto-saves JWT to `token` variable)
+3. `Students (Protected) > Create Student`
+4. `Students (Protected) > List Students`
+5. `Students (Protected) > Get Student By ID`
+6. `Students (Protected) > Update Student`
+7. `Students (Protected) > Delete Student`
+
+## Core API summary
+
+### Public auth endpoints
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+
+### Protected student endpoints
+- `GET /api/students`
+- `GET /api/students/{id}`
+- `POST /api/students`
+- `PUT /api/students/{id}`
+- `DELETE /api/students/{id}`
+
+## Sample request bodies
+
+### Register
 ```json
 {
   "name": "Demo User",
   "email": "demo@example.com",
-  "password": "StrongPass1#"
+  "password": "StrongPass1"
 }
 ```
-- Success: `201 Created`
-- Errors: `400` (validation), `409` (email exists)
 
-2. `POST /api/auth/login`
-- Request:
+### Login
 ```json
 {
   "email": "demo@example.com",
-  "password": "StrongPass1#"
-}
-```
-- Success: `200 OK`
-- Errors: `400` (validation), `401` (invalid credentials)
-
-Auth success response:
-```json
-{
-  "token": "<JWT>",
-  "tokenType": "Bearer",
-  "expiresInSeconds": 3600
+  "password": "StrongPass1"
 }
 ```
 
-### Students (JWT required)
-Add header: `Authorization: Bearer <JWT>`
-
-1. `GET /api/students`
-2. `GET /api/students/{id}`
-3. `POST /api/students`
-4. `PUT /api/students/{id}`
-5. `DELETE /api/students/{id}`
-
-Student request body (`POST`/`PUT`):
+### Create/Update Student
 ```json
 {
   "studentId": "HYR-001",
@@ -129,18 +172,46 @@ Student request body (`POST`/`PUT`):
 }
 ```
 
-## 8) Student model field explanation
-- `studentId`: unique institution student identifier
-- `firstName`, `lastName`, `email`: primary identity/contact
-- `course`: enrolled program/course
-- `academicYear`: current year of study
-- `enrollmentDate`: official admission date
-- `gpa`: current grade point average
-- `phone`, `address`: student contact details
-- `emergencyContactName`, `emergencyContactPhone`: emergency contact
-- `status`: current lifecycle status (example: `ACTIVE`)
+## Expected responses (quick check)
+- Register success: `201` + token JSON
+- Login success: `200` + token JSON
+- List students initially: `200` + `[]`
+- Unauthorized protected request: `401`
+- Create student success: `201`
+- Delete student success: `204`
 
-## 9) Assumptions / design decisions
-- Single user role (`USER`) is enough for assignment scope.
-- JWT is stateless; no refresh-token flow included.
-- No optional features (Swagger, Docker, rate-limiting, pagination, search, tests) to keep project focused on required parts only.
+## Student model field explanation
+- `studentId`: unique institution student identifier
+- `firstName`, `lastName`, `email`: identity/contact
+- `course`, `academicYear`, `enrollmentDate`, `gpa`: academic information
+- `phone`, `address`: contact details
+- `emergencyContactName`, `emergencyContactPhone`: emergency contact details
+- `status`: student state (example: `ACTIVE`)
+
+## Troubleshooting
+
+### 1) `500` on register after architecture changes
+Cause: old table schema conflicts.
+Fix:
+```bash
+psql -h localhost -U postgres -d hyrup -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+```
+Then restart app.
+
+### 2) `echo -n "$JWT_SECRET" | wc -c` gives `0`
+Cause: `.env` not loaded in current terminal.
+Fix:
+```bash
+set -a
+source .env
+set +a
+```
+
+### 3) Protected requests return `401`
+- Run login first
+- Confirm `token` variable is set in Postman
+- Ensure header is `Authorization: Bearer <token>`
+
+## Additional docs
+- API details: `/Users/ananth/Documents/Hyrup project/docs/API_DOCUMENTATION.md`
+- Postman collection: `/Users/ananth/Documents/Hyrup project/postman/HYRUP-Student-Management.postman_collection.json`
