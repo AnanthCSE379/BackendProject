@@ -18,7 +18,7 @@
 
 ## Project structure
 ```text
-/Users/ananth/Documents/Hyrup project/src/main/java/com/hyrup/studentmanagement
+/BackendProject/src/main/java/com/hyrup/studentmanagement
 ├── AppUser.java
 ├── AppUserRepository.java
 ├── AuthController.java
@@ -30,14 +30,14 @@
 ├── StudentManagementApplication.java
 └── StudentRepository.java
 
-/Users/ananth/Documents/Hyrup project/src/main/resources
+/BackendProject/src/main/resources
 └── application.yml
 ```
 
 ## Environment variables
 Use:
-- `/Users/ananth/Documents/Hyrup project/.env`
-- `/Users/ananth/Documents/Hyrup project/.env.example`
+- `/BackendProject/.env`
+- `/BackendProject/.env.example`
 
 | Variable | Description |
 |---|---|
@@ -182,30 +182,6 @@ Inside a request tab:
 - `phone`, `address`: contact details
 - `emergencyContactName`, `emergencyContactPhone`: emergency contact details
 - `status`: student state (examples: `ACTIVE` , `CLOSED`)
-
-## Troubleshooting
-
-### 1) `500` on register after architecture changes
-Cause: old table schema conflicts.
-Fix:
-```bash
-psql -h localhost -U postgres -d hyrup -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-```
-Then restart app.
-
-### 2) `echo -n "$JWT_SECRET" | wc -c` gives `0`
-Cause: `.env` not loaded in current terminal.
-Fix:
-```bash
-set -a
-source .env
-set +a
-```
-
-### 3) Protected requests return `401`
-- Run login first
-- Confirm `token` variable is set in Postman
-- Ensure header is `Authorization: Bearer <token>`
 
 ## Additional docs
 - API details: `/Users/ananth/Documents/Hyrup project/docs/API_DOCUMENTATION.md`
