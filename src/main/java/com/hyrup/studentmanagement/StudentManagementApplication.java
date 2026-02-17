@@ -2,10 +2,12 @@ package com.hyrup.studentmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
+//Main spring application program
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class StudentManagementApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(StudentManagementApplication.class, args);
     }

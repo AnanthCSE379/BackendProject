@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+//The Mapping between DB Table and the backend system , ID - primary key, Column - standard column
 @Entity
 @Table(name = "app_users")
 public class AppUser {
