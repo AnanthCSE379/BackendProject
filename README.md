@@ -1,6 +1,4 @@
-# HYRUP Student Management API (Core Requirements Only)
-
-Minimal Spring Boot implementation focused strictly on mandatory assignment requirements.
+# HYRUP Student Management API
 
 ## What this project includes
 - Secure auth APIs: register and login
@@ -9,11 +7,7 @@ Minimal Spring Boot implementation focused strictly on mandatory assignment requ
 - Protected student CRUD APIs
 - PostgreSQL persistence via Spring Data JPA
 - Postman collection and API documentation
-
-## Scope decisions
-- Only core requirements are implemented
-- Optional features removed (Docker, Swagger, Flyway, refresh tokens, rate limiting, pagination/search, test scaffolding)
-
+  
 ## Tech stack
 - Java 17
 - Spring Boot 3.2.x
@@ -57,6 +51,7 @@ Use:
 ## Setup and run
 
 ### 1) Start PostgreSQL
+- Note that brew services is for macos, equivalent commands for windows and linux systems 
 ```bash
 brew services start postgresql@16
 pg_isready -h localhost -p 5432
@@ -186,7 +181,7 @@ Inside a request tab:
 - `course`, `academicYear`, `enrollmentDate`, `gpa`: academic information
 - `phone`, `address`: contact details
 - `emergencyContactName`, `emergencyContactPhone`: emergency contact details
-- `status`: student state (example: `ACTIVE`)
+- `status`: student state (examples: `ACTIVE` , `CLOSED`)
 
 ## Troubleshooting
 
