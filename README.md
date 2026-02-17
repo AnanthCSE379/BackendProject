@@ -65,7 +65,7 @@ If it already exists, ignore the error.
 
 ### 3) Load environment variables
 ```bash
-cd "/Users/ananth/Documents/Hyrup project"
+cd "/BackendProject/Hyrup project"
 set -a
 source .env
 set +a
@@ -93,7 +93,7 @@ Sign in (or use guest mode if shown).
 
 ### 2) Import collection
 Import file:
-- `/Users/ananth/Documents/Hyrup project/postman/HYRUP-Student-Management.postman_collection.json`
+- `/BackendProject/postman/HYRUP-Student-Management.postman_collection.json`
 
 ### 3) Set collection variable
 In Postman collection variables:
@@ -184,5 +184,5 @@ Inside a request tab:
 - `status`: student state (examples: `ACTIVE` , `CLOSED`)
 
 ## Additional docs
-- API details: `/Users/ananth/Documents/Hyrup project/docs/API_DOCUMENTATION.md`
-- Postman collection: `/Users/ananth/Documents/Hyrup project/postman/HYRUP-Student-Management.postman_collection.json`
+- API details: `/BackendProject/docs/API_DOCUMENTATION.md`
+- Postman collection: `/BackendProject/postman/HYRUP-Student-Management.postman_collection.json`
