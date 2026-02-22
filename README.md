@@ -1,4 +1,4 @@
-# HYRUP Student Management API
+# Student Management API
 
 ## What this project includes
 - Secure auth APIs: register and login
